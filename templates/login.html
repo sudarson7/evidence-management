@@ -1,1 +1,54 @@
 
+{% extends "base.html" %}
+
+{% block title %}System Login - Blockchain Evidence Management System{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="glass-card">
+        <div class="page-header-box" style="margin-bottom: 1.8rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔐</div>
+            <h1 class="page-title" style="font-size: 1.8rem;">System Login</h1>
+            <p class="page-subtitle">Authenticate to access cryptographic evidence ledger</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">📧 Email Address</label>
+                <input type="email" id="email" class="form-control" placeholder="e.g. investigator@agency.gov" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">🔑 Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+            </div>
+
+            <div class="form-group">
+                <label for="role">🛡️ Security Role</label>
+                <select id="role" class="form-control" required>
+                    <option value="">Select Official Role</option>
+                    <option value="System Administrator">System Administrator</option>
+                    <option value="Digital Forensic Investigator">Digital Forensic Investigator</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="loginBtn" style="margin-top: 1rem;">
+                🔓 Authenticate & Request OTP
+            </button>
+
+            <div id="message" style="margin-top: 15px; color: var(--danger); text-align: center; font-weight: 500; font-size: 0.92rem;"></div>
+
+            <div style="text-align: center; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Don't have an investigator account? 
+                    <a href="{{ url_for('register') }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">Register Here</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}
