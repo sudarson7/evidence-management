@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile - Blockchain Evidence Management System{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 650px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 700; color: #ffffff; margin: 0 auto 1rem; box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);">
+            {{ user.fullname[0]|upper if user and user.fullname else '👤' }}
+        </div>
+        <h1 class="page-title" style="font-size: 1.8rem;">Investigator Profile</h1>
+        <p class="page-subtitle">Authenticated Blockchain Identity</p>
+    </div>
+
+    <div class="table-responsive" style="margin-bottom: 2rem;">
+        <table class="custom-table">
+            <tbody>
+                <tr>
+                    <td style="font-weight: 600; color: var(--primary); width: 180px;">👤 Full Name</td>
+                    <td style="font-size: 1.05rem; font-weight: 600; color: #ffffff;">{{ user.fullname }}</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--primary);">📧 Email Address</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--primary);">📱 Phone Number</td>
+                    <td>{{ user.phone }}</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; color: var(--primary);">🛡️ Security Role</td>
+                    <td>
+                        <span class="badge badge-info" style="font-size: 0.9rem; padding: 0.4rem 1rem;">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display: flex; gap: 1rem;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            ⬅ Back to Dashboard
+        </a>
+        <a href="{{ url_for('logout') }}" class="btn btn-primary" style="background: linear-gradient(135deg, var(--danger), #be123c);">
+            🚪 Logout Session
+        </a>
+    </div>
+</div>
+{% endblock %}
