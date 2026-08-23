@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Blockchain Verification - Blockchain Evidence Management System{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <div class="page-header-box">
+        <h1 class="page-title">⛓️ Blockchain Evidence Integrity Verification</h1>
+        <p class="page-subtitle">Cryptographic verification of SHA-256 hash chaining and raw file checksums</p>
+    </div>
+
+    <!-- OVERALL STATUS BANNER -->
+    {% if overall_status %}
+    <div style="background: var(--success-bg); border: 1px solid var(--success); color: var(--success); padding: 1.2rem; border-radius: var(--radius-md); text-align: center; font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+        <span style="font-size: 1.8rem;">🟢</span> BLOCKCHAIN CHAIN INTEGRITY 100% VERIFIED & SECURE
+    </div>
+    {% else %}
+    <div style="background: var(--danger-bg); border: 1px solid var(--danger); color: var(--danger); padding: 1.2rem; border-radius: var(--radius-md); text-align: center; font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+        <span style="font-size: 1.8rem;">🔴</span> CRITICAL ALERT: BLOCKCHAIN TAMPERING / CORRUPTION DETECTED
+    </div>
+    {% endif %}
+
+    <!-- SUMMARY METRICS -->
+    <div class="stats-grid" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+            <div class="stat-icon icon-blue">⛓️</div>
+            <div class="stat-info">
+                <h3>{{ total_blocks }}</h3>
+                <p>Total Blocks</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon icon-green">✅</div>
+            <div class="stat-info">
+                <h3 style="color: var(--success);">{{ valid_blocks }}</h3>
+                <p>Valid Blocks</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon icon-red">❌</div>
+            <div class="stat-info">
+                <h3 style="color: var(--danger);">{{ tampered_blocks }}</h3>
+                <p>Tampered Blocks</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISUAL BLOCKCHAIN NODES -->
+    <h2 style="font-size: 1.3rem; color: #ffffff; margin-bottom: 1rem;">🔗 Visual Cryptographic Block Chain</h2>
+    
+    <div class="blockchain-visualizer">
+        {% for item in blockchain %}
+        <div class="block-node {% if item.chain_status and item.file_status %}valid{% else %}tampered{% endif %}">
+            <div class="block-header">
+                <div class="block-number">
+                    <span>📦 Block #{{ loop.index }}</span>
+                    <span class="badge badge-info">{{ item.case_id }}</span>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    {% if item.file_status %}
+                    <span class="badge badge-verified">File: Verified</span>
+                    {% else %}
+                    <span class="badge badge-tampered">File: Tampered</span>
+                    {% endif %}
+
+                    {% if item.chain_status %}
+                    <span class="badge badge-verified">Chain: Linked</span>
+                    {% else %}
+                    <span class="badge badge-tampered">Chain: Broken</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="block-details-grid">
+                <div class="block-field">
+                    <label>Evidence Name</label>
+                    <span style="color: #ffffff; font-weight: 600;">{{ item.evidence_name }}</span>
+                </div>
+                <div class="block-field">
+                    <label>Uploaded By</label>
+                    <span>{{ item.uploaded_by }}</span>
+                </div>
+                <div class="block-field">
+                    <label>Timestamp</label>
+                    <span style="color: var(--text-muted);">{{ item.upload_date }}</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color); display: flex; flex-direction: column; gap: 0.5rem;">
+                <div class="block-field">
+                    <label>Previous Hash (Parent Pointer)</label>
+                    <div class="hash-code">
+                        {{ item.previous_hash }}
+                        <button class="copy-btn" onclick="copyToClipboard('{{ item.previous_hash }}', this)">📋</button>
+                    </div>
+                </div>
+                <div class="block-field">
+                    <label>Current Block Hash</label>
+                    <div class="hash-code" style="color: var(--primary-hover);">
+                        {{ item.current_hash }}
+                        <button class="copy-btn" onclick="copyToClipboard('{{ item.current_hash }}', this)">📋</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if not loop.last %}
+        <div class="chain-connector">⬇️ ⛓️ Linked to Next Block ⬇️</div>
+        {% endif %}
+        {% else %}
+        <p style="color: var(--text-muted); text-align: center;">No blockchain blocks created yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- DETAILED MATRIX TABLE -->
+    <h2 style="font-size: 1.3rem; color: #ffffff; margin-top: 2.5rem; margin-bottom: 1rem;">📊 Block Integrity Verification Table</h2>
+    
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Block</th>
+                    <th>Case ID</th>
+                    <th>Evidence Designation</th>
+                    <th>File Integrity</th>
+                    <th>Chain Status</th>
+                    <th>Previous Hash</th>
+                    <th>Current Hash</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in blockchain %}
+                <tr>
+                    <td><strong style="color: var(--primary);">#{{ loop.index }}</strong></td>
+                    <td><span class="badge badge-info">{{ item.case_id }}</span></td>
+                    <td><strong style="color: #ffffff;">{{ item.evidence_name }}</strong></td>
+                    <td>
+                        {% if item.file_status %}
+                        <span class="badge badge-verified">✔ VERIFIED</span>
+                        {% else %}
+                        <span class="badge badge-tampered">✘ TAMPERED</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.chain_status %}
+                        <span class="badge badge-verified">✔ LINKED</span>
+                        {% else %}
+                        <span class="badge badge-tampered">✘ BROKEN</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="hash-code" title="{{ item.previous_hash }}">
+                            {{ item.previous_hash[:14] }}...
+                            <button class="copy-btn" onclick="copyToClipboard('{{ item.previous_hash }}', this)">📋</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="hash-code" title="{{ item.current_hash }}">
+                            {{ item.current_hash[:14] }}...
+                            <button class="copy-btn" onclick="copyToClipboard('{{ item.current_hash }}', this)">📋</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 1.8rem;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="width: auto; min-width: 180px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

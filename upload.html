@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Evidence - Blockchain Evidence Management System{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+    <div class="page-header-box" style="margin-bottom: 2rem;">
+        <h1 class="page-title">📤 Upload Digital Evidence</h1>
+        <p class="page-subtitle">Cryptographically hash and link evidence into the SHA-256 blockchain ledger</p>
+    </div>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="caseid">🆔 Case Reference ID</label>
+            <input type="text" id="caseid" name="caseid" class="form-control" placeholder="e.g. CASE-2026-9041" required>
+        </div>
+
+        <div class="form-group">
+            <label for="evidencename">📄 Evidence Designation Name</label>
+            <input type="text" id="evidencename" name="evidencename" class="form-control" placeholder="e.g. Forensic Hard Drive Dump #1" required>
+        </div>
+
+        <div class="form-group">
+            <label>📁 Select Digital Evidence File</label>
+            <div class="dropzone" id="dropzone">
+                <div class="dropzone-icon">📂</div>
+                <h3>Drag & Drop File Here or Click to Browse</h3>
+                <p>Supports Documents, Disk Images, Audio, Video, Network PCAPs</p>
+                <input type="file" id="file" name="file" required>
+            </div>
+            
+            <div class="file-preview-box" id="filePreview">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <strong id="previewFileName" style="color: #ffffff;">filename.ext</strong>
+                    <span id="previewFileSize" style="color: var(--text-muted); font-size: 0.85rem;">0 KB</span>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">
+                    Calculated SHA-256 Pre-hash:
+                    <div id="previewFileHash" class="hash-code" style="margin-top: 4px; display: block; overflow: hidden; text-overflow: ellipsis;">
+                        Computing cryptographic hash...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary" id="uploadBtn">
+                🚀 Upload & Generate Blockchain Block
+            </button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="width: auto; min-width: 160px;">
+                ⬅ Back
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Blockchain Evidence Management System{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{{ url_for('dashboard') if session.get('user') else url_for('login') }}" class="brand-logo">
+                <div class="brand-icon">🛡️</div>
+                <div class="brand-text">
+                    <h2>EVIDENCE CHAIN</h2>
+                    <span>Blockchain Security System</span>
+                </div>
+            </a>
+
+            {% if session.get('user') %}
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">☰</button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <a href="{{ url_for('dashboard') }}">📊 Dashboard</a>
+                </li>
+                <li class="nav-item {% if request.endpoint == 'upload' %}active{% endif %}">
+                    <a href="{{ url_for('upload') }}">📤 Upload</a>
+                </li>
+                <li class="nav-item {% if request.endpoint == 'evidence' %}active{% endif %}">
+                    <a href="{{ url_for('evidence') }}">📁 Records</a>
+                </li>
+                <li class="nav-item {% if request.endpoint == 'verify' %}active{% endif %}">
+                    <a href="{{ url_for('verify') }}">⛓️ Verification</a>
+                </li>
+                <li class="nav-item {% if request.endpoint == 'audit' %}active{% endif %}">
+                    <a href="{{ url_for('audit') }}">📋 Audit Logs</a>
+                </li>
+                <li class="nav-item {% if request.endpoint == 'profile' %}active{% endif %}">
+                    <a href="{{ url_for('profile') }}">👤 Profile</a>
+                </li>
+                <li class="nav-item">
+                    <div class="user-profile-badge">
+                        <div class="user-avatar-sm">{{ session.get('user')[0]|upper }}</div>
+                        <span class="user-name-sm">{{ session.get('user').split('@')[0] }}</span>
+                        <a href="{{ url_for('logout') }}" title="Logout" style="padding:0; margin-left:5px; color:#f43f5e; text-decoration:none; font-size:1.1rem;">🚪</a>
+                    </div>
+                </li>
+            </ul>
+            {% else %}
+            <div style="display:flex; gap:10px;">
+                <a href="{{ url_for('login') }}" class="btn btn-secondary btn-sm">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Register Account</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <main class="main-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>🛡️ Blockchain Evidence Management System &copy; {{ current_year if current_year else '2026' }}. SHA-256 Tamper-Proof Cryptographic Storage.</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
