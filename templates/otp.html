@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Verify OTP - Blockchain Evidence Management System{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 440px;">
+    <div class="glass-card">
+        <div class="page-header-box" style="margin-bottom: 1.8rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">📱</div>
+            <h1 class="page-title" style="font-size: 1.8rem;">2FA OTP Verification</h1>
+            <p class="page-subtitle">Enter the 6-digit security code sent to your registered Gmail</p>
+        </div>
+
+        <div class="form-group" style="text-align: center;">
+            <label for="otp" style="font-size: 1rem; margin-bottom: 0.8rem;">Enter Verification Code</label>
+            <input type="text" id="otp" class="form-control" placeholder="• • • • • •" maxlength="6" 
+                   style="text-align: center; font-size: 1.8rem; letter-spacing: 12px; font-family: var(--font-mono); font-weight: 700; color: var(--primary);" 
+                   required autofocus>
+        </div>
+
+        <button onclick="verifyOTP()" class="btn btn-primary" style="margin-top: 1rem;">
+            ✅ Verify Security Code
+        </button>
+
+        <button onclick="resendOTP()" class="btn btn-secondary" style="margin-top: 0.75rem;">
+            🔄 Resend OTP Code
+        </button>
+
+        <div id="msg" style="margin-top: 15px; text-align: center; font-weight: 500; font-size: 0.92rem; color: var(--primary);"></div>
+
+        <p style="margin-top: 1.25rem; color: var(--text-muted); font-size: 0.85rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 0.85rem;">
+            📩 A 6-digit OTP code has been sent directly to <b>{{ session.get('otp_email') }}</b>.<br>
+            Please check your Gmail inbox.
+        </p>
+
+
+
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function verifyOTP() {
+    const otpInput = document.getElementById("otp");
+    const otp = otpInput.value.trim();
+    const msgEl = document.getElementById("msg");
+
+    if (!otp || otp.length !== 6) {
+        msgEl.style.color = "var(--danger)";
+        msgEl.innerText = "Please enter a valid 6-digit OTP code.";
+        return;
+    }
+
+    msgEl.style.color = "var(--primary)";
+    msgEl.innerText = "Verifying authentication token...";
+
+    fetch("/verify_otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ otp: otp })
+    })
+    .then(res => res.json())
+    .then(data => {
+        msgEl.innerText = data.message;
+        if (data.success) {
+            msgEl.style.color = "var(--success)";
+            showToast("OTP Verified Successfully!", "success");
+            setTimeout(() => {
+                window.location.href = "/dashboard";
+            }, 800);
+        } else {
+            msgEl.style.color = "var(--danger)";
+            showToast(data.message, "error");
+        }
+    })
+    .catch(err => {
+        msgEl.style.color = "var(--danger)";
+        msgEl.innerText = "Server communication error.";
+    });
+}
+
+function resendOTP() {
+    const msgEl = document.getElementById("msg");
+    msgEl.style.color = "var(--primary)";
+    msgEl.innerText = "Requesting new security token...";
+
+    fetch("/resend_otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.json())
+    .then(data => {
+        msgEl.innerText = data.message;
+        if (data.success) {
+            showToast("New OTP Code Sent!", "success");
+        } else {
+            showToast(data.message, "error");
+        }
+    });
+}
+
+// Support ENTER key on input
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("otp")?.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") verifyOTP();
+    });
+});
+</script>
+{% endblock %}
