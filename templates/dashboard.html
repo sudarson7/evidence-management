@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Blockchain Evidence Management System{% endblock %}
+
+{% block content %}
+<div class="page-header-box">
+    <h1 class="page-title">🛡️ Executive Command Dashboard</h1>
+    <p class="page-subtitle">Welcome, <strong style="color: var(--primary);">{{ session['user'] }}</strong> | Cryptographic Evidence Operations</p>
+</div>
+
+<!-- STATS OVERVIEW WIDGETS -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon icon-blue">📂</div>
+        <div class="stat-info">
+            <h3>{{ total_evidence }}</h3>
+            <p>Total Evidence Files</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-green">🟢</div>
+        <div class="stat-info">
+            <h3 style="color: var(--success);">{{ verified }}</h3>
+            <p>Verified Integrity</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-red">🔴</div>
+        <div class="stat-info">
+            <h3 style="color: var(--danger);">{{ tampered }}</h3>
+            <p>Tampered / Missing</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-purple">📋</div>
+        <div class="stat-info">
+            <h3>{{ total_logs }}</h3>
+            <p>Blockchain Audit Logs</p>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN ACTION MODULES -->
+<div class="glass-card">
+    <h2 style="font-size: 1.4rem; font-weight: 600; color: #ffffff; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        ⚡ System Modules & Services
+    </h2>
+
+    <div class="menu-grid">
+        <a href="{{ url_for('upload') }}" class="action-card upload-card">
+            <div class="action-icon">📤</div>
+            <h3>Upload Digital Evidence</h3>
+            <p>Store digital evidence securely using SHA-256 cryptographic hashing and block chaining.</p>
+        </a>
+
+        <a href="{{ url_for('evidence') }}" class="action-card records-card">
+            <div class="action-icon">📁</div>
+            <h3>Evidence Records Ledger</h3>
+            <p>Inspect all recorded evidence files, case mappings, and integrity status badges.</p>
+        </a>
+
+        <a href="{{ url_for('verify') }}" class="action-card verify-card">
+            <div class="action-icon">⛓️</div>
+            <h3>Verify Blockchain Chain</h3>
+            <p>Run full integrity audit to detect file tampering and verify hash linkage sequence.</p>
+        </a>
+
+        <a href="{{ url_for('audit') }}" class="action-card audit-card">
+            <div class="action-icon">📋</div>
+            <h3>Audit Activity Logs</h3>
+            <p>Review immutable blockchain audit log entries recording all system interactions.</p>
+        </a>
+
+        <a href="{{ url_for('profile') }}" class="action-card profile-card">
+            <div class="action-icon">👤</div>
+            <h3>User Account Profile</h3>
+            <p>View investigator profile credentials, security role, and system identity details.</p>
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="action-card logout-card">
+            <div class="action-icon">🚪</div>
+            <h3>Secure Logout</h3>
+            <p>Terminate current active session safely and purge authorization tokens.</p>
+        </a>
+    </div>
+</div>
+{% endblock %}
