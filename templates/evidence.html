@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Evidence Records Ledger - Blockchain Evidence Management System{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <div class="page-header-box">
+        <h1 class="page-title">📁 Evidence Records Ledger</h1>
+        <p class="page-subtitle">Cryptographically secured digital evidence repository linked via SHA-256</p>
+    </div>
+
+    <!-- SEARCH & FILTER BAR -->
+    <div class="search-filter-box">
+        <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="evidenceSearch" placeholder="Search by Case ID, Evidence Name, File, or Hash..." onkeyup="filterTable('evidenceSearch', 'evidenceTable')">
+        </div>
+    </div>
+
+    <!-- EVIDENCE TABLE -->
+    <div class="table-responsive">
+        <table class="custom-table" id="evidenceTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Case ID</th>
+                    <th>Evidence Designation</th>
+                    <th>File Name</th>
+                    <th>SHA-256 Hash</th>
+                    <th>Uploaded By</th>
+                    <th>Timestamp</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in evidence %}
+                <tr>
+                    <td><strong style="color: var(--primary);">#{{ item.id }}</strong></td>
+                    <td><span class="badge badge-info">{{ item.case_id }}</span></td>
+                    <td><strong style="color: #ffffff;">{{ item.evidence_name }}</strong></td>
+                    <td>📄 {{ item.file_name }}</td>
+                    <td>
+                        <div class="hash-code" title="{{ item.file_hash }}">
+                            {{ item.file_hash[:16] }}...
+                            <button class="copy-btn" onclick="copyToClipboard('{{ item.file_hash }}', this)" title="Copy SHA-256 Hash">📋</button>
+                        </div>
+                    </td>
+                    <td>{{ item.uploaded_by }}</td>
+                    <td style="font-size: 0.88rem; color: var(--text-muted);">{{ item.upload_date }}</td>
+                    <td>
+                        {% if item.file_status %}
+                        <span class="badge badge-verified">✔ VERIFIED</span>
+                        {% else %}
+                        <span class="badge badge-tampered">✘ TAMPERED</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('download_evidence', evidence_id=item.id) }}" class="btn btn-secondary btn-sm" title="Download File">
+                            ⬇️ Download
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        No evidence records uploaded yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 1.8rem;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="width: auto; min-width: 180px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
